@@ -11,7 +11,7 @@
 <body>
 
     <div class="container mt-4">
-        <h1 class="mb-4">Data Anak</h1>
+        <h1 class="mb-4">Data Siswa</h1>
         <a href="kelola_kelas.php" class="btn btn-primary mb-2">Kelola Kelas</a>
         <a href="kelola_wali.php" class="btn btn-primary mb-2">Kelola Wali Murid</a>
         <a href="tambah_siswa.php" class="btn btn-success mb-4">Tambah Siswa</a>
