@@ -1,7 +1,7 @@
 <?php
 include 'koneksi.php';
 
-if (isset($_POST['nis'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nis = $_POST['nis'];
     $nama_siswa = $_POST['nama_siswa'];
     $jenis_kelamin = $_POST['jenis_kelamin'];
@@ -10,22 +10,19 @@ if (isset($_POST['nis'])) {
     $id_kelas = $_POST['id_kelas'];
     $id_wali = $_POST['id_wali'];
 
-    $query = "UPDATE siswa SET 
-                nama_siswa='$nama_siswa',
-                jenis_kelamin='$jenis_kelamin',
-                tempat_lahir='$tempat_lahir',
-                tanggal_lahir='$tanggal_lahir',
-                id_kelas='$id_kelas',
-                id_wali='$id_wali' ";
+    $sql = "UPDATE siswa SET 
+                nama_siswa = '$nama_siswa',
+                jenis_kelamin = '$jenis_kelamin',
+                tempat_lahir = '$tempat_lahir',
+                tanggal_lahir = '$tanggal_lahir',
+                id_kelas = '$id_kelas',
+                id_wali = '$id_wali'
+            WHERE nis = '$nis'";
 
-    $hasil = mysqli_query($koneksi, $query);
-
-    if ($hasil) {
-        header("Location: index.php"); // balik ke data siswa
+    if (mysqli_query($koneksi, $sql)) {
+        echo "<script>alert('Data siswa berhasil diupdate'); window.location='index.php';</script>";
     } else {
-        echo "Gagal update data!";
+        echo "Error: " . mysqli_error($koneksi);
     }
-}else {
-    echo "NIS tidak ditemukan!";
 }
 ?>

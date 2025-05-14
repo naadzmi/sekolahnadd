@@ -22,50 +22,76 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 $kelas = mysqli_query($koneksi, "SELECT * FROM kelas");
 $wali = mysqli_query($koneksi, "SELECT * FROM wali_murid");
-
 ?>
 
+<!DOCTYPE html>
 <html>
-    <head>
-        <title> Tambah Siswa </title>
-    </head>
-    <body>
-        <h2>Tambah Siswa</h2>
-        <form method="POST">
-            NIS:
-             <input type="text" name="nis" required><br/>
+<head>
+    <title>Tambah Siswa</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
 
-            Nama Siswa:
-             <input type="text" name="nama_siswa" required><br/>
+    <h2 class="mb-4">Tambah Siswa</h2>
 
-            Jenis Kelamin: 
-            <select name="jenis_kelamin" required>
-                <option value="L">Laki-laki<option>
-                <option value="P">Perempuan<option>
-            </select><br/>
+    <form method="POST" class="row g-3">
 
-            Tempat Lahir:
-            <input type="text" name="tempat_lahir" required><br/>
+        <div class="col-md-6">
+            <label class="form-label">NIS:</label>
+            <input type="text" name="nis" class="form-control" required>
+        </div>
 
-            Tanggal Lahir:
-            <input type="date" name="tanggal_lahir" required><br/>
+        <div class="col-md-6">
+            <label class="form-label">Nama Siswa:</label>
+            <input type="text" name="nama_siswa" class="form-control" required>
+        </div>
 
-            Kelas: 
-            <select name="id_kelas" required>.
+        <div class="col-md-6">
+            <label class="form-label">Jenis Kelamin:</label>
+            <select name="jenis_kelamin" class="form-select" required>
+                <option value="">-- Pilih --</option>
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Tempat Lahir:</label>
+            <input type="text" name="tempat_lahir" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Tanggal Lahir:</label>
+            <input type="date" name="tanggal_lahir" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Kelas:</label>
+            <select name="id_kelas" class="form-select" required>
+                <option value="">-- Pilih Kelas --</option>
                 <?php while($data = mysqli_fetch_assoc($kelas)): ?>
-                <option value="<?php echo $data['id_kelas']?>"><?php echo $data['nama_kelas']?></option>
+                    <option value="<?= $data['id_kelas']; ?>"><?= $data['nama_kelas']; ?></option>
                 <?php endwhile; ?>
-            </select><br/>
+            </select>
+        </div>
 
-            Wali Murid: 
-            <select name="id_wali" required>
+        <div class="col-md-6">
+            <label class="form-label">Wali Murid:</label>
+            <select name="id_wali" class="form-select" required>
+                <option value="">-- Pilih Wali --</option>
                 <?php while($data = mysqli_fetch_assoc($wali)): ?>
-                <option value="<?php echo $data['id_wali']?>"><?php echo $data['nama_wali']?></option>
+                    <option value="<?= $data['id_wali']; ?>"><?= $data['nama_wali']; ?></option>
                 <?php endwhile; ?>
-            </select><br/>
+            </select>
+        </div>
 
-            <input type="submit" name="simpan" value="simpan">
-            <a href="index.php">Batal</a>
-        </form>
-    </body>
+        <div class="col-12">
+            <button type="submit" name="simpan" class="btn btn-success">Simpan</button>
+            <a href="index.php" class="btn btn-secondary">Batal</a>
+        </div>
+
+    </form>
+
+</body>
 </html>

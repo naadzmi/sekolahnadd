@@ -1,46 +1,86 @@
 <?php
-// Koneksi ke database
-$koneksi = new mysqli("localhost", "root", "", "sekolahnad");
+include 'koneksi.php';
 
-// Ambil ID siswa dari URL
-$nis = $_GET['nis'];
+$nis = $_GET['nis'] ?? '';
 
-// Ambil data siswa berdasarkan NIS
+// Validasi input
+if (!$nis) {
+    echo "NIS tidak ditemukan!";
+    exit;
+}
+
+// Ambil data siswa
 $query = $koneksi->query("SELECT * FROM siswa WHERE nis='$nis'");
 $data = $query->fetch_assoc();
+
+// Ambil data kelas & wali untuk dropdown
+$kelas = $koneksi->query("SELECT * FROM kelas");
+$wali = $koneksi->query("SELECT * FROM wali_murid");
 ?>
 
-<h2>Edit Data Siswa</h2>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Data Siswa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Edit Data Siswa</h2>
+    <form action="update_siswa.php" method="POST">
 
-<form action="update_siswa.php" method="POST">
-    <input type="hidden" name="nis" value="<?php echo $data['nis']; ?>">
+        <input type="hidden" name="nis" value="<?php echo $data['nis']; ?>">
 
-    <p>Nama Siswa:
-        <input type="text" name="nama_siswa" value="<?php echo $data['nama_siswa']; ?>">
-        </p>
+        <div class="mb-3">
+            <label class="form-label">Nama Siswa</label>
+            <input type="text" class="form-control" name="nama_siswa" value="<?php echo $data['nama_siswa']; ?>" required>
+        </div>
 
-<p>Jenis Kelamin:
-    <select name="jenis_kelamin">
-        <option value="P" <?php if($data['jenis_kelamin'] == 'P') echo 'selected'; ?>>Perempuan</option>
-        <option value="L" <?php if($data['jenis_kelamin'] == 'L') echo 'selected'; ?>>Laki-laki</option>
-    </select>
-</p>
+        <div class="mb-3">
+            <label class="form-label">Jenis Kelamin</label>
+            <select class="form-select" name="jenis_kelamin" required>
+                <option value="L" <?php if($data['jenis_kelamin'] == 'L') echo 'selected'; ?>>Laki-laki</option>
+                <option value="P" <?php if($data['jenis_kelamin'] == 'P') echo 'selected'; ?>>Perempuan</option>
+            </select>
+        </div>
 
-<p>Tempat Lahir:
-    <input type="text" name="tempat_lahir" value="<?php echo $data['tempat_lahir']; ?>">
-</p>
+        <div class="mb-3">
+            <label class="form-label">Tempat Lahir</label>
+            <input type="text" class="form-control" name="tempat_lahir" value="<?php echo $data['tempat_lahir']; ?>" required>
+        </div>
 
-<p>Tanggal Lahir:
-    <input type="date" name="tanggal_lahir" value="<?php echo $data['tanggal_lahir']; ?>">
-</p>
+        <div class="mb-3">
+            <label class="form-label">Tanggal Lahir</label>
+            <input type="date" class="form-control" name="tanggal_lahir" value="<?php echo $data['tanggal_lahir']; ?>" required>
+        </div>
 
-<p>Id Kelas:
-    <input type="text" name="id_kelas" value="<?php echo $data['id_kelas']; ?>">
-</p>
+        <div class="mb-3">
+            <label class="form-label">Kelas</label>
+            <select name="id_kelas" class="form-select" required>
+                <?php while($row = $kelas->fetch_assoc()): ?>
+                    <option value="<?= $row['id_kelas']; ?>" <?php if($data['id_kelas'] == $row['id_kelas']) echo 'selected'; ?>>
+                        <?= $row['nama_kelas']; ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+        </div>
 
-<p>Id Wali:
-        <input type="text" name="id_wali" value="<?php echo $data['id_wali']; ?>">
-    </p>
+        <div class="mb-3">
+            <label class="form-label">Wali Murid</label>
+            <select name="id_wali" class="form-select" required>
+                <?php while($row = $wali->fetch_assoc()): ?>
+                    <option value="<?= $row['id_wali']; ?>" <?php if($data['id_wali'] == $row['id_wali']) echo 'selected'; ?>>
+                        <?= $row['nama_wali']; ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+        </div>
 
-    <p><button type="submit">Update</button></p>
-</form>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="index.php" class="btn btn-secondary">Batal</a>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
